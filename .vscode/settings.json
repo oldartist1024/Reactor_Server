@@ -1,0 +1,14 @@
+{
+    "ros.distro": "noetic",
+    "C_Cpp.errorSquiggles": "Enabled",
+    "C_Cpp.dimInactiveRegions": true,
+    "C_Cpp.intelliSenseEngine": "Default",
+    "C_Cpp.default.compilerPath": "/usr/bin/g++",
+    "C_Cpp.default.cppStandard": "c++17",
+    "C_Cpp.autocomplete": "Default",
+    "C_Cpp.formatting": "Default",
+    "C_Cpp.suggestSnippets": true,
+    "files.associations": {
+        "*.h": "cpp"
+    }
+}
