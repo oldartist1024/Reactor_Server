@@ -6,6 +6,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/main.dir/src/ChannelMap.cpp.o"
   "CMakeFiles/main.dir/src/EpollDispatcher.cpp.o"
   "CMakeFiles/main.dir/src/EventLoop.cpp.o"
+  "CMakeFiles/main.dir/src/HttpRequest.cpp.o"
+  "CMakeFiles/main.dir/src/HttpResponse.cpp.o"
   "CMakeFiles/main.dir/src/TcpConnection.cpp.o"
   "CMakeFiles/main.dir/src/TcpServer.cpp.o"
   "CMakeFiles/main.dir/src/ThreadPool.cpp.o"

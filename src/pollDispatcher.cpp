@@ -57,7 +57,7 @@ static int polladd(struct Channel *channel, struct EventLoop *evLoop)
         {
             data->fd[i].fd = channel->fd;
             data->fd[i].events = events;
-            if(data->maxfd < i) 
+            if (data->maxfd < i)
                 data->maxfd = i;
             ret = 1;
             break;
@@ -77,11 +77,12 @@ static int pollremove(struct Channel *channel, struct EventLoop *evLoop)
             data->fd[i].fd = -1;
             data->fd[i].events = 0;
             data->fd[i].revents = 0;
-            //要不要更新maxfd
+            // 要不要更新maxfd
             ret = 1;
             break;
         }
     }
+    channel->destroyCallback(channel->arg);
     return ret;
 }
 // 修改
@@ -115,10 +116,10 @@ static int polldispatch(struct EventLoop *evLoop, int timeout)
         perror("poll");
         exit(0);
     }
-    for (int i = 0; i < data->maxfd+1; i++)
+    for (int i = 0; i < data->maxfd + 1; i++)
     {
         int fd = data->fd[i].fd;
-        if(fd == -1)
+        if (fd == -1)
             continue;
         int events = data->fd[i].revents;
         if (events & POLLERR || events & POLLHUP)
@@ -129,12 +130,12 @@ static int polldispatch(struct EventLoop *evLoop, int timeout)
         if (events & POLLIN)
         {
             // 读事件
-            eventActivate(evLoop,fd,READ_EVENT);
+            eventActivate(evLoop, fd, READ_EVENT);
         }
         if (events & POLLOUT)
         {
             // 写事件
-            eventActivate(evLoop,fd,WRITE_EVENT);
+            eventActivate(evLoop, fd, WRITE_EVENT);
         }
     }
     return 0;

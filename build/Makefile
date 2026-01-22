@@ -258,6 +258,60 @@ src/EventLoop.cpp.s:
 	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/src/EventLoop.cpp.s
 .PHONY : src/EventLoop.cpp.s
 
+src/HttpRequest.o: src/HttpRequest.cpp.o
+
+.PHONY : src/HttpRequest.o
+
+# target to build an object file
+src/HttpRequest.cpp.o:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/src/HttpRequest.cpp.o
+.PHONY : src/HttpRequest.cpp.o
+
+src/HttpRequest.i: src/HttpRequest.cpp.i
+
+.PHONY : src/HttpRequest.i
+
+# target to preprocess a source file
+src/HttpRequest.cpp.i:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/src/HttpRequest.cpp.i
+.PHONY : src/HttpRequest.cpp.i
+
+src/HttpRequest.s: src/HttpRequest.cpp.s
+
+.PHONY : src/HttpRequest.s
+
+# target to generate assembly for a file
+src/HttpRequest.cpp.s:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/src/HttpRequest.cpp.s
+.PHONY : src/HttpRequest.cpp.s
+
+src/HttpResponse.o: src/HttpResponse.cpp.o
+
+.PHONY : src/HttpResponse.o
+
+# target to build an object file
+src/HttpResponse.cpp.o:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/src/HttpResponse.cpp.o
+.PHONY : src/HttpResponse.cpp.o
+
+src/HttpResponse.i: src/HttpResponse.cpp.i
+
+.PHONY : src/HttpResponse.i
+
+# target to preprocess a source file
+src/HttpResponse.cpp.i:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/src/HttpResponse.cpp.i
+.PHONY : src/HttpResponse.cpp.i
+
+src/HttpResponse.s: src/HttpResponse.cpp.s
+
+.PHONY : src/HttpResponse.s
+
+# target to generate assembly for a file
+src/HttpResponse.cpp.s:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/src/HttpResponse.cpp.s
+.PHONY : src/HttpResponse.cpp.s
+
 src/TcpConnection.o: src/TcpConnection.cpp.o
 
 .PHONY : src/TcpConnection.o
@@ -471,6 +525,12 @@ help:
 	@echo "... src/EventLoop.o"
 	@echo "... src/EventLoop.i"
 	@echo "... src/EventLoop.s"
+	@echo "... src/HttpRequest.o"
+	@echo "... src/HttpRequest.i"
+	@echo "... src/HttpRequest.s"
+	@echo "... src/HttpResponse.o"
+	@echo "... src/HttpResponse.i"
+	@echo "... src/HttpResponse.s"
 	@echo "... src/TcpConnection.o"
 	@echo "... src/TcpConnection.i"
 	@echo "... src/TcpConnection.s"

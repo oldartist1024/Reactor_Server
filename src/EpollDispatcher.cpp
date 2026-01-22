@@ -76,6 +76,7 @@ static int epollremove(struct Channel *channel, struct EventLoop *evLoop)
         perror("epoll_ctl del");
         return 0;
     }
+    channel->destroyCallback(channel->arg);
     return ret;
 }
 // 修改
@@ -93,25 +94,25 @@ static int epollmodify(struct Channel *channel, struct EventLoop *evLoop)
 static int epolldispatch(struct EventLoop *evLoop, int timeout)
 {
     epoll_eventData *data = (epoll_eventData *)(evLoop->dispatcherData);
-    int num=epoll_wait(data->epfd,data->event,MAX,timeout*1000);
-    for(int i=0;i<num;i++)
+    int num = epoll_wait(data->epfd, data->event, MAX, timeout * 1000);
+    for (int i = 0; i < num; i++)
     {
-        int events=data->event[i].events;
-        int fd=data->event[i].data.fd;
+        int events = data->event[i].events;
+        int fd = data->event[i].data.fd;
         if (events & EPOLLERR || events & EPOLLHUP)
         {
             // 对方断开了连接, 删除 fd
             continue;
         }
-        if(events&EPOLLIN)
+        if (events & EPOLLIN)
         {
-            //读事件
-            eventActivate(evLoop,fd,READ_EVENT);
+            // 读事件
+            eventActivate(evLoop, fd, READ_EVENT);
         }
-        if(events&EPOLLOUT)
+        if (events & EPOLLOUT)
         {
-            //写事件
-            eventActivate(evLoop,fd,WRITE_EVENT);
+            // 写事件
+            eventActivate(evLoop, fd, WRITE_EVENT);
         }
     }
     return 0;

@@ -40,7 +40,7 @@ EventLoop *EventLoopInit(const char *name)
         perror("socketpair");
         return nullptr;
     }
-    Channel *channel = ChannelInit(evLoop->socketPair[1], READ_EVENT, readLocalMessage, nullptr, evLoop);
+    Channel *channel = ChannelInit(evLoop->socketPair[1], READ_EVENT, readLocalMessage, nullptr, nullptr, evLoop);
     eventLoopAddTask(evLoop, channel, ADD);
     return evLoop;
 }
@@ -86,7 +86,7 @@ int eventLoopAddTask(EventLoop *evLoop, Channel *channel, int type)
     element->channel = channel;
     element->type = type;
     element->next = nullptr;
-    if (evLoop->head)
+    if (!evLoop->head)
     {
         evLoop->head = evLoop->tail = element;
     }
@@ -151,7 +151,7 @@ int eventLoopAdd(EventLoop *evLoop, Channel *channel)
         }
     }
     int ret = -1;
-    if (channelMap->list[fd])
+    if (!channelMap->list[fd])
     {
         channelMap->list[fd] = channel;
         ret = evLoop->dispatcher->add(channel, evLoop);

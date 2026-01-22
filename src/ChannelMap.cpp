@@ -28,21 +28,21 @@ void ChannelMapClear(ChannelMap *map)
 
 bool makeMapRoom(ChannelMap *map, int newSize, int unitSize)
 {
-    if(map!=nullptr)
+    if (map != nullptr)
     {
-        if(map->size<newSize)
+        if (map->size < newSize)
         {
-            int currentSize=map->size;
-            while(currentSize<newSize)
+            int currentSize = map->size;
+            while (currentSize < newSize)
             {
-                currentSize=currentSize*2;
+                currentSize = currentSize * 2;
             }
-            Channel ** newMap=(Channel **)realloc(map->list,currentSize*unitSize);
-            if(newMap!=nullptr)
+            Channel **newMap = (Channel **)realloc(map->list, currentSize * unitSize);
+            if (newMap != nullptr)
             {
-                map->list=newMap;
-                memset(&map->list[map->size],0,(currentSize - map->size) * unitSize);
-                map->size=currentSize;
+                map->list = newMap;
+                memset(&map->list[map->size], 0, (currentSize - map->size) * unitSize);
+                map->size = currentSize;
                 return true;
             }
         }

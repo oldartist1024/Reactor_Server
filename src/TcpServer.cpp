@@ -52,22 +52,23 @@ Listener *listenerInit(unsigned short port)
 }
 int acceptConnection(void *arg)
 {
-    TcpServer *server=(TcpServer *)arg;
-    int cfd = accept(server->listener->lfd, nullptr,nullptr);
-    if(cfd == -1)
+    TcpServer *server = (TcpServer *)arg;
+    int cfd = accept(server->listener->lfd, nullptr, nullptr);
+    if (cfd == -1)
     {
         perror("accept");
         exit(0);
     }
     EventLoop *workerLoop = takeWorkerEventLoop(server->threadPool);
-    //将其加入tcpconnection中
-    TcpConnectionInit(cfd,workerLoop);
+    // 将其加入tcpconnection中
+    TcpConnectionInit(cfd, workerLoop);
     return 0;
 }
 void tcpServerRun(TcpServer *server)
 {
+    Debug("服务器程序已经启动了...");
     threadPoolRun(server->threadPool);
-    Channel *channel = ChannelInit(server->listener->lfd, READ_EVENT, acceptConnection, nullptr, server);
-    eventLoopAddTask(server->mainLoop,channel, ADD);
+    Channel *channel = ChannelInit(server->listener->lfd, READ_EVENT, acceptConnection, nullptr, nullptr, server);
+    eventLoopAddTask(server->mainLoop, channel, ADD);
     EventLoopRun(server->mainLoop);
 }

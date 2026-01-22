@@ -9,6 +9,8 @@ set(CMAKE_DEPENDS_CHECK_CXX
   "/home/xu/CPP_Project/Reactor_Server/src/ChannelMap.cpp" "/home/xu/CPP_Project/Reactor_Server/build/CMakeFiles/main.dir/src/ChannelMap.cpp.o"
   "/home/xu/CPP_Project/Reactor_Server/src/EpollDispatcher.cpp" "/home/xu/CPP_Project/Reactor_Server/build/CMakeFiles/main.dir/src/EpollDispatcher.cpp.o"
   "/home/xu/CPP_Project/Reactor_Server/src/EventLoop.cpp" "/home/xu/CPP_Project/Reactor_Server/build/CMakeFiles/main.dir/src/EventLoop.cpp.o"
+  "/home/xu/CPP_Project/Reactor_Server/src/HttpRequest.cpp" "/home/xu/CPP_Project/Reactor_Server/build/CMakeFiles/main.dir/src/HttpRequest.cpp.o"
+  "/home/xu/CPP_Project/Reactor_Server/src/HttpResponse.cpp" "/home/xu/CPP_Project/Reactor_Server/build/CMakeFiles/main.dir/src/HttpResponse.cpp.o"
   "/home/xu/CPP_Project/Reactor_Server/src/TcpConnection.cpp" "/home/xu/CPP_Project/Reactor_Server/build/CMakeFiles/main.dir/src/TcpConnection.cpp.o"
   "/home/xu/CPP_Project/Reactor_Server/src/TcpServer.cpp" "/home/xu/CPP_Project/Reactor_Server/build/CMakeFiles/main.dir/src/TcpServer.cpp.o"
   "/home/xu/CPP_Project/Reactor_Server/src/ThreadPool.cpp" "/home/xu/CPP_Project/Reactor_Server/build/CMakeFiles/main.dir/src/ThreadPool.cpp.o"

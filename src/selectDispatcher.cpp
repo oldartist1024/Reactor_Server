@@ -58,6 +58,7 @@ static int selectremove(struct Channel *channel, struct EventLoop *evLoop)
         FD_CLR(channel->fd, &data->readfds);
     if (channel->events & WRITE_EVENT)
         FD_CLR(channel->fd, &data->writefds);
+    channel->destroyCallback(channel->arg);
     return 1;
 }
 // 修改

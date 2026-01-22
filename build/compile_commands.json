@@ -26,6 +26,16 @@
 },
 {
   "directory": "/home/xu/CPP_Project/Reactor_Server/build",
+  "command": "/usr/bin/g++   -I/home/xu/CPP_Project/Reactor_Server/include  -g   -o CMakeFiles/main.dir/src/HttpRequest.cpp.o -c /home/xu/CPP_Project/Reactor_Server/src/HttpRequest.cpp",
+  "file": "/home/xu/CPP_Project/Reactor_Server/src/HttpRequest.cpp"
+},
+{
+  "directory": "/home/xu/CPP_Project/Reactor_Server/build",
+  "command": "/usr/bin/g++   -I/home/xu/CPP_Project/Reactor_Server/include  -g   -o CMakeFiles/main.dir/src/HttpResponse.cpp.o -c /home/xu/CPP_Project/Reactor_Server/src/HttpResponse.cpp",
+  "file": "/home/xu/CPP_Project/Reactor_Server/src/HttpResponse.cpp"
+},
+{
+  "directory": "/home/xu/CPP_Project/Reactor_Server/build",
   "command": "/usr/bin/g++   -I/home/xu/CPP_Project/Reactor_Server/include  -g   -o CMakeFiles/main.dir/src/TcpConnection.cpp.o -c /home/xu/CPP_Project/Reactor_Server/src/TcpConnection.cpp",
   "file": "/home/xu/CPP_Project/Reactor_Server/src/TcpConnection.cpp"
 },

@@ -29,7 +29,6 @@ void bufferExtendRoom(Buffer *buffer, int size)
     // 1.能直接写
     if (bufferWriteableSize(buffer) >= size)
     {
-
     }
     // 2.可以移动一下内存再写
     else if (buffer->capacity - bufferReadableSize(buffer) >= size)
@@ -42,7 +41,7 @@ void bufferExtendRoom(Buffer *buffer, int size)
     } // 3.写不下，进行扩容
     else
     {
-        char* temp = (char*)realloc(buffer->data, buffer->capacity + size);
+        char *temp = (char *)realloc(buffer->data, buffer->capacity + size);
         if (temp == NULL)
         {
             return; // 失败了
@@ -66,7 +65,7 @@ int bufferReadableSize(Buffer *buffer)
 
 int bufferAppendData(Buffer *buffer, const char *data, int size)
 {
-    if(!buffer||!data||size<=0)
+    if (!buffer || !data || size <= 0)
         return -1;
     bufferExtendRoom(buffer, size);
     memcpy(buffer->data + buffer->writePos, data, size);
@@ -83,12 +82,34 @@ int bufferAppendString(Buffer *buffer, const char *data)
 int bufferSocketRead(Buffer *buffer, int fd)
 {
     char buf[1024];
-    int res= read(fd,buf, sizeof(buf));
-    if(res<0)
+    int res = read(fd, buf, sizeof(buf));
+    if (res < 0)
         return -1;
     else
     {
-        bufferAppendData(buffer,buf,res);
+        bufferAppendData(buffer, buf, res);
     }
     return res;
+}
+
+char *bufferFindCRLF(Buffer *buffer)
+{
+    char *ptr = (char *)memmem(buffer->data + buffer->readPos, bufferReadableSize(buffer), "\r\n", 2);
+    return ptr;
+}
+
+int bufferSendData(Buffer *buffer, int cfd)
+{
+    int readableSize = bufferReadableSize(buffer);
+    if (readableSize > 0)
+    {
+        int count = send(cfd, buffer->data + buffer->readPos, readableSize, MSG_NOSIGNAL);
+        if (count > 0)
+        {
+            buffer->readPos += count;
+            usleep(1);
+        }
+        return count;
+    }
+    return 0;
 }

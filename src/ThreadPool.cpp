@@ -36,13 +36,13 @@ EventLoop *takeWorkerEventLoop(ThreadPool *threadpool)
         exit(0);
     }
     EventLoop *evLoop = threadpool->mainLoop;
-    if(threadpool->ThreadNum)
+    if (threadpool->ThreadNum)
     {
-        evLoop=threadpool->workerThreads[threadpool->Index].eventLoop;
+        evLoop = threadpool->workerThreads[threadpool->Index].eventLoop;
         threadpool->Index++;
-        if(threadpool->Index>=threadpool->ThreadNum)
+        if (threadpool->Index >= threadpool->ThreadNum)
         {
-            threadpool->Index=0;
+            threadpool->Index = 0;
         }
     }
     return evLoop;
