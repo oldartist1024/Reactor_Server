@@ -49,6 +49,9 @@ void httpResponsePrepareMsg(HttpResponse *response, Buffer *sendBuf, int socket)
     }
     // 空行
     bufferAppendString(sendBuf, "\r\n");
-    // 响应内容
+#ifndef MSG_SEND_AUTO
+    bufferSendData(sendBuf, socket);
+#endif
+    // 执行sendFile or sendDir
     response->sendDataFunc(response->filename, sendBuf, socket);
 }

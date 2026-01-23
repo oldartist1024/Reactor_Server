@@ -5,12 +5,12 @@
 using namespace std;
 struct ChannelMap
 {
-    int size;
-    Channel** list;
+    int size;       // 大小
+    Channel **list; // 指针数组
 };
-ChannelMap* ChannelMapInit(int size);
-// 清空map
-void ChannelMapClear(ChannelMap* map);
-// 重新分配内存空间
-bool makeMapRoom(ChannelMap* map, int newSize, int unitSize);
-
+// ChannelMap 初始化
+ChannelMap *ChannelMapInit(int size);
+// ChannelMap 清空
+void ChannelMapClear(ChannelMap *map);
+// ChannelMap 扩容
+bool makeMapRoom(ChannelMap *map, int newSize, int unitSize);

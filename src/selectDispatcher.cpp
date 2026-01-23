@@ -79,11 +79,14 @@ static int selectmodify(struct Channel *channel, struct EventLoop *evLoop)
 static int selectdispatch(struct EventLoop *evLoop, int timeout)
 {
     selectData *data = (selectData *)(evLoop->dispatcherData);
+    // 检测时间定义
     timeval val;
     val.tv_sec = timeout; /* Seconds.  */
     val.tv_usec = 0;      /* Microseconds.  */
+    // 暂存检测集合
     fd_set rdtemp = data->readfds;
     fd_set wrtemp = data->writefds;
+    // 不动原集合，只检测副本
     int res = select(MAX, &rdtemp, &wrtemp, NULL, &val);
     if (res == -1)
     {

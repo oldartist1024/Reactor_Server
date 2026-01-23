@@ -65,6 +65,8 @@ char *httpRequestGetHeader(HttpRequest *httprequest, const char *key)
     }
     return nullptr;
 }
+// 在start到end范围内, 按照sub拆分字符串, 把拆分出来的字符串赋值给ptr
+// 返回找到的sub+1的位置
 char *splitRequestLine(const char *start, char *end, const char *sub, char **ptr)
 {
     char *space = end;
@@ -82,22 +84,28 @@ char *splitRequestLine(const char *start, char *end, const char *sub, char **ptr
 }
 bool parseHttpRequestLine(HttpRequest *httprequest, Buffer *readBuf)
 {
+    // 找到第一个\r\n
     char *end = bufferFindCRLF(readBuf);
+    // 指向开头
     char *start = readBuf->data + readBuf->readPos;
+    // 计算请求行的长度
     int lineLength = end - start;
     if (lineLength)
     {
+        // 拆分请求行
         start = splitRequestLine(start, end, " ", &httprequest->method);
         start = splitRequestLine(start, end, " ", &httprequest->url);
         splitRequestLine(start, end, nullptr, &httprequest->version);
+        // 跳过字符串
         readBuf->readPos += lineLength;
+        // 跳过\r\n
         readBuf->readPos += 2;
         httprequest->curState = ParseReqHeaders;
         return true;
     }
     return false;
 }
-// 该函数处理请求头中的一行
+// 该函数处理请求头中的一行（当请求头有多行的时候，需要循环处理）
 bool parseHttpRequestHeader(struct HttpRequest *request, struct Buffer *readBuf)
 {
     char *end = bufferFindCRLF(readBuf);
@@ -140,40 +148,45 @@ bool parseHttpRequest(HttpRequest *httprequest, Buffer *readBuf, HttpResponse *r
     bool flag = true;
     while (httprequest->curState != ParseReqDone)
     {
+        // 状态机
         switch (httprequest->curState)
         {
-        case ParseReqLine:
+        case ParseReqLine: // 请求行
             flag = parseHttpRequestLine(httprequest, readBuf);
             break;
-        case ParseReqHeaders:
+        case ParseReqHeaders: // 请求头（循环处理）
             flag = parseHttpRequestHeader(httprequest, readBuf);
             break;
-        case ParseReqBody:
+        case ParseReqBody: // 请求体
             break;
         default:
             break;
         }
-        if (!flag)
+        if (!flag) // 如果解析失败了，直接返回
             return flag;
     }
+    // 解析完毕
     if (httprequest->curState == ParseReqDone)
     {
-        // 处理请求
+        // 处理http请求
         processHttpRequest(httprequest, response);
-        // 发送给客户端
+        // 将响应数据写入WriteBuffer
         httpResponsePrepareMsg(response, sendbuf, socket);
     }
+    // 重置状态机
     httprequest->curState = ParseReqLine;
     return flag;
 }
 
-// 处理基于get的http请求
+// 处理基于get的http请求，并且给响应的response结构体赋值
 bool processHttpRequest(HttpRequest *httprequest, HttpResponse *response)
 {
+    // 判断是不是get请求
     if (strcasecmp(httprequest->method, "get") != 0)
     {
         return false;
     }
+    // 解码
     decodeMsg(httprequest->url, httprequest->url);
     // 处理客户端请求的静态资源(目录或者文件)
     char *file = NULL;

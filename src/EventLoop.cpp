@@ -1,5 +1,5 @@
 #include "EventLoop.h"
-
+// 初始化主反应堆
 EventLoop *EventLoopInit_t()
 {
     return EventLoopInit(nullptr);
@@ -16,6 +16,7 @@ int readLocalMessage(void *arg)
     read(evLoop->socketPair[1], buf, sizeof(buf));
     return 0;
 }
+// 初始化反应堆
 EventLoop *EventLoopInit(const char *name)
 {
     EventLoop *evLoop = (EventLoop *)malloc(sizeof(EventLoop));
@@ -28,12 +29,15 @@ EventLoop *EventLoopInit(const char *name)
 
     evLoop->channelMap = ChannelMapInit(128);
     evLoop->threadId = pthread_self();
+    // 初始化互斥锁
     pthread_mutex_init(&evLoop->lock, nullptr);
+    // 给反应堆的名字赋值
     char threadName[32];
     if (name == nullptr)
         strcpy(evLoop->threadName, "MainThread");
     else
         strcpy(evLoop->threadName, name);
+    // 设置本地通信的socketpair，实现自唤醒机制
     int ret = socketpair(AF_UNIX, SOCK_STREAM, 0, evLoop->socketPair);
     if (ret < 0)
     {
@@ -52,8 +56,9 @@ int EventLoopRun(EventLoop *evLoop)
         return -1;
     }
     Dispatcher *dispatcher = evLoop->dispatcher;
-    while (!evLoop->isQuit)
+    while (!evLoop->isQuit) // 当反应堆还没有退出时
     {
+        // 调用epoll/poll/select的dispatch函数，等待事件的发生
         dispatcher->dispatch(evLoop, 10);
         eventLoopProcessTask(evLoop);
     }
@@ -62,6 +67,7 @@ int EventLoopRun(EventLoop *evLoop)
 
 int eventActivate(EventLoop *evLoop, int fd, int event)
 {
+    // 检测文件描述符与反应堆的合法性
     if (fd <= 0 || evLoop == nullptr)
     {
         return -1;
@@ -79,31 +85,40 @@ int eventActivate(EventLoop *evLoop, int fd, int event)
     return 0;
 }
 
-int eventLoopAddTask(EventLoop *evLoop, Channel *channel, int type)
+int eventLoopAddTask(EventLoop *evLoop, Channel *channel, ElementType type)
 {
     pthread_mutex_lock(&evLoop->lock);
+    // 定义一个链表节点
     ChannelElement *element = (ChannelElement *)malloc(sizeof(ChannelElement));
     element->channel = channel;
-    element->type = type;
+    element->type = type; // 执行什么操作
     element->next = nullptr;
-    if (!evLoop->head)
+    if (!evLoop->head) // 当前链表为空
     {
+        // 头节点和尾节点都指向同一个节点
         evLoop->head = evLoop->tail = element;
     }
     else
     {
+        // 将新节点添加到链表尾部
         evLoop->tail->next = element;
         evLoop->tail = element;
     }
     pthread_mutex_unlock(&evLoop->lock);
     if (evLoop->threadId == pthread_self())
     {
-        // 同一线程，直接处理
+        // 当前子线程，同一线程，直接处理
         eventLoopProcessTask(evLoop);
     }
     else
     {
-        // 不同线程，唤醒线程处理
+        // 主线程在acceptConnection的时候，会轮询地取出一个子反应堆
+        // 然后在TcpConnectionInit里面执行eventLoopAddTask
+        // 把一个用于通信的channel加入到子反应堆的任务队类中
+        // 此时就是evLoop->threadId是子线程的id，而pthread_self()是主线程的id
+
+        // 主线程 -- 告诉子线程处理任务队列中的任务
+        // 主线程只起到接受连接并给子线程分配连接的作用
         writeLocalMessage(evLoop);
     }
     return 0;
@@ -112,11 +127,11 @@ int eventLoopAddTask(EventLoop *evLoop, Channel *channel, int type)
 int eventLoopProcessTask(EventLoop *evLoop)
 {
     pthread_mutex_lock(&evLoop->lock);
-    ChannelElement *head = evLoop->head;
+    ChannelElement *head = evLoop->head; // 取出头节点
     while (head)
     {
         Channel *channel = head->channel;
-        int type = head->type;
+        ElementType type = head->type;
         if (type == ADD)
         {
             eventLoopAdd(evLoop, channel);
@@ -129,11 +144,12 @@ int eventLoopProcessTask(EventLoop *evLoop)
         {
             eventLoopModify(evLoop, channel);
         }
+        // 头节点后移
         ChannelElement *temp = head;
         head = head->next;
-        free(temp);
+        free(temp); // 释放已经被取出的头节点
     }
-    evLoop->head = evLoop->tail = nullptr;
+    evLoop->head = evLoop->tail = nullptr; // 一次性全部取完
     pthread_mutex_unlock(&evLoop->lock);
     return 0;
 }

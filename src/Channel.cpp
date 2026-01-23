@@ -16,10 +16,12 @@ void writeEventEnable(Channel *channel, bool flag)
 {
     if (flag)
     {
+        // 添加写事件
         channel->events |= WRITE_EVENT;
     }
     else
     {
+        // 删除写事件
         channel->events &= ~WRITE_EVENT;
     }
 }

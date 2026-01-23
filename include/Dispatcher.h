@@ -2,19 +2,21 @@
 #include <iostream>
 #include "ChannelMap.h"
 using namespace std;
+// 前向声明
 struct EventLoop;
+// 事件分发器函数接口结构体
 struct Dispatcher
 {
     // init -- 初始化epoll, poll 或者 select 需要的数据块
-    void* (*init)();
+    void *(*init)();
     // 添加
-    int (*add)(struct Channel* channel, struct EventLoop* evLoop);
+    int (*add)(struct Channel *channel, struct EventLoop *evLoop);
     // 删除
-    int (*remove)(struct Channel* channel, struct EventLoop* evLoop);
+    int (*remove)(struct Channel *channel, struct EventLoop *evLoop);
     // 修改
-    int (*modify)(struct Channel* channel, struct EventLoop* evLoop);
+    int (*modify)(struct Channel *channel, struct EventLoop *evLoop);
     // 事件监测
-    int (*dispatch)(struct EventLoop* evLoop, int timeout); // 单位: s
+    int (*dispatch)(struct EventLoop *evLoop, int timeout); // 单位: s
     // 清除数据(关闭fd或者释放内存)
-    int (*clear)(struct EventLoop* evLoop);
+    int (*clear)(struct EventLoop *evLoop);
 };

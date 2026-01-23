@@ -1,7 +1,7 @@
 #pragma once
 #include <iostream>
 #include "Buffer.h"
-#include <cassert> // C++ 风格
+#include <cassert>
 #include <sys/stat.h>
 #include "HttpResponse.h"
 #include "unistd.h"
@@ -9,26 +9,31 @@
 #include "Buffer.h"
 #include <dirent.h>
 #include "TcpConnection.h"
+// 请求头结构
 struct RequestHeader
 {
-    char *key;
-    char *value;
+    char *key;   // 键
+    char *value; // 值
 };
 // 当前的解析状态
 enum HttpRequestState
 {
-    ParseReqLine,
-    ParseReqHeaders,
-    ParseReqBody,
-    ParseReqDone
+    ParseReqLine,    // 解析请求行
+    ParseReqHeaders, // 解析请求头
+    ParseReqBody,    // 解析请求体
+    ParseReqDone     // 解析完成
 };
+// http请求结构体
 struct HttpRequest
 {
+    // 请求行
     char *method;
     char *url;
     char *version;
-    struct RequestHeader *reqHeaders;
-    int reqHeadersNum;
+    // 请求头
+    struct RequestHeader *reqHeaders; // 请求头数组
+    int reqHeadersNum;                // 请求头数量
+    // 当前解析状态
     enum HttpRequestState curState;
 };
 // 初始化
@@ -47,9 +52,9 @@ char *httpRequestGetHeader(HttpRequest *httprequest, const char *key);
 bool parseHttpRequestLine(HttpRequest *httprequest, Buffer *readBuf);
 // 处理请求头
 bool parseHttpRequestHeader(struct HttpRequest *request, struct Buffer *readBuf);
-// 解析请求
+// 解析HTTP请求
 bool parseHttpRequest(HttpRequest *httprequest, Buffer *readBuf, HttpResponse *response, Buffer *sendbuf, int socket);
-// 处理请求
+// 处理http请求
 bool processHttpRequest(HttpRequest *httprequest, HttpResponse *response);
 // 解码
 void decodeMsg(char *to, char *from);

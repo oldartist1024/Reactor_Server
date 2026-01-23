@@ -9,13 +9,13 @@ struct pollData
     pollfd fd[MAX];
 };
 static void *pollinit();
-// 添加
+// 添加channel到pollfd数组
 static int polladd(struct Channel *channel, struct EventLoop *evLoop);
-// 删除
+// 删除channel从pollfd数组
 static int pollremove(struct Channel *channel, struct EventLoop *evLoop);
-// 修改
+// 修改channel在pollfd数组的事件
 static int pollmodify(struct Channel *channel, struct EventLoop *evLoop);
-// 事件监测
+// 事件监测并执行对应回调
 static int polldispatch(struct EventLoop *evLoop, int timeout); // 单位: s
 // 清除数据(关闭fd或者释放内存)
 static int pollclear(struct EventLoop *evLoop);
@@ -82,6 +82,7 @@ static int pollremove(struct Channel *channel, struct EventLoop *evLoop)
             break;
         }
     }
+    // 移除channel后，调用其销毁回调函数（断开tcp连接的函数）
     channel->destroyCallback(channel->arg);
     return ret;
 }

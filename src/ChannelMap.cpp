@@ -4,7 +4,9 @@ ChannelMap *ChannelMapInit(int size)
 {
     ChannelMap *channelmap = (ChannelMap *)malloc(sizeof(ChannelMap));
     channelmap->size = size;
+    // 创建一个指针数组，每一个指针指向一个Channel结构体
     channelmap->list = (Channel **)malloc(sizeof(Channel *) * size);
+    memset(channelmap->list, 0, sizeof(Channel *) * size);
     return channelmap;
 }
 
@@ -33,6 +35,7 @@ bool makeMapRoom(ChannelMap *map, int newSize, int unitSize)
         if (map->size < newSize)
         {
             int currentSize = map->size;
+            // 按2的倍数扩容，先找到扩完的大小，再进行扩容
             while (currentSize < newSize)
             {
                 currentSize = currentSize * 2;
