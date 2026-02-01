@@ -3,7 +3,7 @@ file(REMOVE_RECURSE
   "../output/main.pdb"
   "CMakeFiles/main.dir/src/Buffer.cpp.o"
   "CMakeFiles/main.dir/src/Channel.cpp.o"
-  "CMakeFiles/main.dir/src/ChannelMap.cpp.o"
+  "CMakeFiles/main.dir/src/Dispatcher.cpp.o"
   "CMakeFiles/main.dir/src/EpollDispatcher.cpp.o"
   "CMakeFiles/main.dir/src/EventLoop.cpp.o"
   "CMakeFiles/main.dir/src/HttpRequest.cpp.o"

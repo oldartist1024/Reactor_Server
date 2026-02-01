@@ -7,31 +7,37 @@ CMakeFiles/main.dir/src/Buffer.cpp.o: ../src/Buffer.cpp
 CMakeFiles/main.dir/src/Channel.cpp.o: ../include/Channel.h
 CMakeFiles/main.dir/src/Channel.cpp.o: ../src/Channel.cpp
 
-CMakeFiles/main.dir/src/ChannelMap.cpp.o: ../include/Channel.h
-CMakeFiles/main.dir/src/ChannelMap.cpp.o: ../include/ChannelMap.h
-CMakeFiles/main.dir/src/ChannelMap.cpp.o: ../src/ChannelMap.cpp
+CMakeFiles/main.dir/src/Dispatcher.cpp.o: ../include/Channel.h
+CMakeFiles/main.dir/src/Dispatcher.cpp.o: ../include/Dispatcher.h
+CMakeFiles/main.dir/src/Dispatcher.cpp.o: ../src/Dispatcher.cpp
 
 CMakeFiles/main.dir/src/EpollDispatcher.cpp.o: ../include/Channel.h
-CMakeFiles/main.dir/src/EpollDispatcher.cpp.o: ../include/ChannelMap.h
 CMakeFiles/main.dir/src/EpollDispatcher.cpp.o: ../include/Dispatcher.h
+CMakeFiles/main.dir/src/EpollDispatcher.cpp.o: ../include/EpollDispatcher.h
 CMakeFiles/main.dir/src/EpollDispatcher.cpp.o: ../include/EventLoop.h
+CMakeFiles/main.dir/src/EpollDispatcher.cpp.o: ../include/pollDispatcher.h
+CMakeFiles/main.dir/src/EpollDispatcher.cpp.o: ../include/selectDispatcher.h
 CMakeFiles/main.dir/src/EpollDispatcher.cpp.o: ../src/EpollDispatcher.cpp
 
 CMakeFiles/main.dir/src/EventLoop.cpp.o: ../include/Channel.h
-CMakeFiles/main.dir/src/EventLoop.cpp.o: ../include/ChannelMap.h
 CMakeFiles/main.dir/src/EventLoop.cpp.o: ../include/Dispatcher.h
+CMakeFiles/main.dir/src/EventLoop.cpp.o: ../include/EpollDispatcher.h
 CMakeFiles/main.dir/src/EventLoop.cpp.o: ../include/EventLoop.h
+CMakeFiles/main.dir/src/EventLoop.cpp.o: ../include/pollDispatcher.h
+CMakeFiles/main.dir/src/EventLoop.cpp.o: ../include/selectDispatcher.h
 CMakeFiles/main.dir/src/EventLoop.cpp.o: ../src/EventLoop.cpp
 
 CMakeFiles/main.dir/src/HttpRequest.cpp.o: ../include/Buffer.h
 CMakeFiles/main.dir/src/HttpRequest.cpp.o: ../include/Channel.h
-CMakeFiles/main.dir/src/HttpRequest.cpp.o: ../include/ChannelMap.h
 CMakeFiles/main.dir/src/HttpRequest.cpp.o: ../include/Dispatcher.h
+CMakeFiles/main.dir/src/HttpRequest.cpp.o: ../include/EpollDispatcher.h
 CMakeFiles/main.dir/src/HttpRequest.cpp.o: ../include/EventLoop.h
 CMakeFiles/main.dir/src/HttpRequest.cpp.o: ../include/HttpRequest.h
 CMakeFiles/main.dir/src/HttpRequest.cpp.o: ../include/HttpResponse.h
 CMakeFiles/main.dir/src/HttpRequest.cpp.o: ../include/Log.h
 CMakeFiles/main.dir/src/HttpRequest.cpp.o: ../include/TcpConnection.h
+CMakeFiles/main.dir/src/HttpRequest.cpp.o: ../include/pollDispatcher.h
+CMakeFiles/main.dir/src/HttpRequest.cpp.o: ../include/selectDispatcher.h
 CMakeFiles/main.dir/src/HttpRequest.cpp.o: ../src/HttpRequest.cpp
 
 CMakeFiles/main.dir/src/HttpResponse.cpp.o: ../include/Buffer.h
@@ -40,19 +46,21 @@ CMakeFiles/main.dir/src/HttpResponse.cpp.o: ../src/HttpResponse.cpp
 
 CMakeFiles/main.dir/src/TcpConnection.cpp.o: ../include/Buffer.h
 CMakeFiles/main.dir/src/TcpConnection.cpp.o: ../include/Channel.h
-CMakeFiles/main.dir/src/TcpConnection.cpp.o: ../include/ChannelMap.h
 CMakeFiles/main.dir/src/TcpConnection.cpp.o: ../include/Dispatcher.h
+CMakeFiles/main.dir/src/TcpConnection.cpp.o: ../include/EpollDispatcher.h
 CMakeFiles/main.dir/src/TcpConnection.cpp.o: ../include/EventLoop.h
 CMakeFiles/main.dir/src/TcpConnection.cpp.o: ../include/HttpRequest.h
 CMakeFiles/main.dir/src/TcpConnection.cpp.o: ../include/HttpResponse.h
 CMakeFiles/main.dir/src/TcpConnection.cpp.o: ../include/Log.h
 CMakeFiles/main.dir/src/TcpConnection.cpp.o: ../include/TcpConnection.h
+CMakeFiles/main.dir/src/TcpConnection.cpp.o: ../include/pollDispatcher.h
+CMakeFiles/main.dir/src/TcpConnection.cpp.o: ../include/selectDispatcher.h
 CMakeFiles/main.dir/src/TcpConnection.cpp.o: ../src/TcpConnection.cpp
 
 CMakeFiles/main.dir/src/TcpServer.cpp.o: ../include/Buffer.h
 CMakeFiles/main.dir/src/TcpServer.cpp.o: ../include/Channel.h
-CMakeFiles/main.dir/src/TcpServer.cpp.o: ../include/ChannelMap.h
 CMakeFiles/main.dir/src/TcpServer.cpp.o: ../include/Dispatcher.h
+CMakeFiles/main.dir/src/TcpServer.cpp.o: ../include/EpollDispatcher.h
 CMakeFiles/main.dir/src/TcpServer.cpp.o: ../include/EventLoop.h
 CMakeFiles/main.dir/src/TcpServer.cpp.o: ../include/HttpRequest.h
 CMakeFiles/main.dir/src/TcpServer.cpp.o: ../include/HttpResponse.h
@@ -61,27 +69,33 @@ CMakeFiles/main.dir/src/TcpServer.cpp.o: ../include/TcpConnection.h
 CMakeFiles/main.dir/src/TcpServer.cpp.o: ../include/TcpServer.h
 CMakeFiles/main.dir/src/TcpServer.cpp.o: ../include/ThreadPool.h
 CMakeFiles/main.dir/src/TcpServer.cpp.o: ../include/WorkerThread.h
+CMakeFiles/main.dir/src/TcpServer.cpp.o: ../include/pollDispatcher.h
+CMakeFiles/main.dir/src/TcpServer.cpp.o: ../include/selectDispatcher.h
 CMakeFiles/main.dir/src/TcpServer.cpp.o: ../src/TcpServer.cpp
 
 CMakeFiles/main.dir/src/ThreadPool.cpp.o: ../include/Channel.h
-CMakeFiles/main.dir/src/ThreadPool.cpp.o: ../include/ChannelMap.h
 CMakeFiles/main.dir/src/ThreadPool.cpp.o: ../include/Dispatcher.h
+CMakeFiles/main.dir/src/ThreadPool.cpp.o: ../include/EpollDispatcher.h
 CMakeFiles/main.dir/src/ThreadPool.cpp.o: ../include/EventLoop.h
 CMakeFiles/main.dir/src/ThreadPool.cpp.o: ../include/ThreadPool.h
 CMakeFiles/main.dir/src/ThreadPool.cpp.o: ../include/WorkerThread.h
+CMakeFiles/main.dir/src/ThreadPool.cpp.o: ../include/pollDispatcher.h
+CMakeFiles/main.dir/src/ThreadPool.cpp.o: ../include/selectDispatcher.h
 CMakeFiles/main.dir/src/ThreadPool.cpp.o: ../src/ThreadPool.cpp
 
 CMakeFiles/main.dir/src/WorkerThread.cpp.o: ../include/Channel.h
-CMakeFiles/main.dir/src/WorkerThread.cpp.o: ../include/ChannelMap.h
 CMakeFiles/main.dir/src/WorkerThread.cpp.o: ../include/Dispatcher.h
+CMakeFiles/main.dir/src/WorkerThread.cpp.o: ../include/EpollDispatcher.h
 CMakeFiles/main.dir/src/WorkerThread.cpp.o: ../include/EventLoop.h
 CMakeFiles/main.dir/src/WorkerThread.cpp.o: ../include/WorkerThread.h
+CMakeFiles/main.dir/src/WorkerThread.cpp.o: ../include/pollDispatcher.h
+CMakeFiles/main.dir/src/WorkerThread.cpp.o: ../include/selectDispatcher.h
 CMakeFiles/main.dir/src/WorkerThread.cpp.o: ../src/WorkerThread.cpp
 
 CMakeFiles/main.dir/src/main.cpp.o: ../include/Buffer.h
 CMakeFiles/main.dir/src/main.cpp.o: ../include/Channel.h
-CMakeFiles/main.dir/src/main.cpp.o: ../include/ChannelMap.h
 CMakeFiles/main.dir/src/main.cpp.o: ../include/Dispatcher.h
+CMakeFiles/main.dir/src/main.cpp.o: ../include/EpollDispatcher.h
 CMakeFiles/main.dir/src/main.cpp.o: ../include/EventLoop.h
 CMakeFiles/main.dir/src/main.cpp.o: ../include/HttpRequest.h
 CMakeFiles/main.dir/src/main.cpp.o: ../include/HttpResponse.h
@@ -90,17 +104,23 @@ CMakeFiles/main.dir/src/main.cpp.o: ../include/TcpConnection.h
 CMakeFiles/main.dir/src/main.cpp.o: ../include/TcpServer.h
 CMakeFiles/main.dir/src/main.cpp.o: ../include/ThreadPool.h
 CMakeFiles/main.dir/src/main.cpp.o: ../include/WorkerThread.h
+CMakeFiles/main.dir/src/main.cpp.o: ../include/pollDispatcher.h
+CMakeFiles/main.dir/src/main.cpp.o: ../include/selectDispatcher.h
 CMakeFiles/main.dir/src/main.cpp.o: ../src/main.cpp
 
 CMakeFiles/main.dir/src/pollDispatcher.cpp.o: ../include/Channel.h
-CMakeFiles/main.dir/src/pollDispatcher.cpp.o: ../include/ChannelMap.h
 CMakeFiles/main.dir/src/pollDispatcher.cpp.o: ../include/Dispatcher.h
+CMakeFiles/main.dir/src/pollDispatcher.cpp.o: ../include/EpollDispatcher.h
 CMakeFiles/main.dir/src/pollDispatcher.cpp.o: ../include/EventLoop.h
+CMakeFiles/main.dir/src/pollDispatcher.cpp.o: ../include/pollDispatcher.h
+CMakeFiles/main.dir/src/pollDispatcher.cpp.o: ../include/selectDispatcher.h
 CMakeFiles/main.dir/src/pollDispatcher.cpp.o: ../src/pollDispatcher.cpp
 
 CMakeFiles/main.dir/src/selectDispatcher.cpp.o: ../include/Channel.h
-CMakeFiles/main.dir/src/selectDispatcher.cpp.o: ../include/ChannelMap.h
 CMakeFiles/main.dir/src/selectDispatcher.cpp.o: ../include/Dispatcher.h
+CMakeFiles/main.dir/src/selectDispatcher.cpp.o: ../include/EpollDispatcher.h
 CMakeFiles/main.dir/src/selectDispatcher.cpp.o: ../include/EventLoop.h
+CMakeFiles/main.dir/src/selectDispatcher.cpp.o: ../include/pollDispatcher.h
+CMakeFiles/main.dir/src/selectDispatcher.cpp.o: ../include/selectDispatcher.h
 CMakeFiles/main.dir/src/selectDispatcher.cpp.o: ../src/selectDispatcher.cpp
 

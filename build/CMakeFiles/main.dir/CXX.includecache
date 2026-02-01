@@ -15,35 +15,49 @@ unistd.h
 -
 sys/socket.h
 -
-
-../include/Channel.h
-iostream
+string
 -
 
-../include/ChannelMap.h
-Channel.h
 ../include/Channel.h
-string.h
+functional
 -
 
 ../include/Dispatcher.h
-iostream
+Channel.h
+../include/Channel.h
+string
 -
-ChannelMap.h
-../include/ChannelMap.h
+
+../include/EpollDispatcher.h
+unistd.h
+-
+Dispatcher.h
+../include/Dispatcher.h
+sys/epoll.h
+-
 
 ../include/EventLoop.h
-iostream
--
 Dispatcher.h
 ../include/Dispatcher.h
 sys/socket.h
 -
-unistd.h
--
 cassert
 -
-pthread.h
+thread
+-
+mutex
+-
+queue
+-
+map
+-
+cstring
+-
+EpollDispatcher.h
+-
+selectDispatcher.h
+-
+pollDispatcher.h
 -
 
 ../include/HttpRequest.h
@@ -67,6 +81,8 @@ dirent.h
 -
 TcpConnection.h
 ../include/TcpConnection.h
+map
+-
 
 ../include/HttpResponse.h
 iostream
@@ -75,6 +91,10 @@ Buffer.h
 ../include/Buffer.h
 string
 ../include/string
+functional
+-
+map
+-
 
 ../include/Log.h
 stdarg.h
@@ -95,6 +115,8 @@ HttpResponse.h
 ../include/HttpResponse.h
 Log.h
 ../include/Log.h
+sstream
+-
 
 ../include/TcpServer.h
 EventLoop.h
@@ -111,28 +133,36 @@ EventLoop.h
 ../include/EventLoop.h
 WorkerThread.h
 ../include/WorkerThread.h
+vector
+-
 
 ../include/WorkerThread.h
-pthread.h
+thread
+-
+EventLoop.h
+../include/EventLoop.h
+condition_variable
+-
+
+../include/pollDispatcher.h
+unistd.h
+-
+Dispatcher.h
+../include/Dispatcher.h
+poll.h
 -
 EventLoop.h
 ../include/EventLoop.h
 
-/home/xu/CPP_Project/Reactor_Server/src/HttpRequest.cpp
-HttpRequest.h
-/home/xu/CPP_Project/Reactor_Server/src/HttpRequest.h
-
-/home/xu/CPP_Project/Reactor_Server/src/HttpResponse.cpp
-HttpResponse.h
-/home/xu/CPP_Project/Reactor_Server/src/HttpResponse.h
-
-/home/xu/CPP_Project/Reactor_Server/src/TcpConnection.cpp
-TcpConnection.h
-/home/xu/CPP_Project/Reactor_Server/src/TcpConnection.h
-
-/home/xu/CPP_Project/Reactor_Server/src/TcpServer.cpp
-TcpServer.h
-/home/xu/CPP_Project/Reactor_Server/src/TcpServer.h
+../include/selectDispatcher.h
+unistd.h
+-
+Dispatcher.h
+../include/Dispatcher.h
+sys/select.h
+-
+EventLoop.h
+../include/EventLoop.h
 
 /home/xu/CPP_Project/Reactor_Server/src/main.cpp
 iostream

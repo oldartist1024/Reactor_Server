@@ -11,8 +11,8 @@
 },
 {
   "directory": "/home/xu/CPP_Project/Reactor_Server/build",
-  "command": "/usr/bin/g++   -I/home/xu/CPP_Project/Reactor_Server/include  -g   -o CMakeFiles/main.dir/src/ChannelMap.cpp.o -c /home/xu/CPP_Project/Reactor_Server/src/ChannelMap.cpp",
-  "file": "/home/xu/CPP_Project/Reactor_Server/src/ChannelMap.cpp"
+  "command": "/usr/bin/g++   -I/home/xu/CPP_Project/Reactor_Server/include  -g   -o CMakeFiles/main.dir/src/Dispatcher.cpp.o -c /home/xu/CPP_Project/Reactor_Server/src/Dispatcher.cpp",
+  "file": "/home/xu/CPP_Project/Reactor_Server/src/Dispatcher.cpp"
 },
 {
   "directory": "/home/xu/CPP_Project/Reactor_Server/build",

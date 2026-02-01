@@ -6,7 +6,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 set(CMAKE_DEPENDS_CHECK_CXX
   "/home/xu/CPP_Project/Reactor_Server/src/Buffer.cpp" "/home/xu/CPP_Project/Reactor_Server/build/CMakeFiles/main.dir/src/Buffer.cpp.o"
   "/home/xu/CPP_Project/Reactor_Server/src/Channel.cpp" "/home/xu/CPP_Project/Reactor_Server/build/CMakeFiles/main.dir/src/Channel.cpp.o"
-  "/home/xu/CPP_Project/Reactor_Server/src/ChannelMap.cpp" "/home/xu/CPP_Project/Reactor_Server/build/CMakeFiles/main.dir/src/ChannelMap.cpp.o"
+  "/home/xu/CPP_Project/Reactor_Server/src/Dispatcher.cpp" "/home/xu/CPP_Project/Reactor_Server/build/CMakeFiles/main.dir/src/Dispatcher.cpp.o"
   "/home/xu/CPP_Project/Reactor_Server/src/EpollDispatcher.cpp" "/home/xu/CPP_Project/Reactor_Server/build/CMakeFiles/main.dir/src/EpollDispatcher.cpp.o"
   "/home/xu/CPP_Project/Reactor_Server/src/EventLoop.cpp" "/home/xu/CPP_Project/Reactor_Server/build/CMakeFiles/main.dir/src/EventLoop.cpp.o"
   "/home/xu/CPP_Project/Reactor_Server/src/HttpRequest.cpp" "/home/xu/CPP_Project/Reactor_Server/build/CMakeFiles/main.dir/src/HttpRequest.cpp.o"

@@ -1,57 +1,43 @@
 #include "HttpResponse.h"
-
-HttpResponse *HttpResponseInit(void)
+HttpResponse::HttpResponse()
 {
-    HttpResponse *httpresponse = (HttpResponse *)malloc(sizeof(HttpResponse));
-    httpresponse->statusCode = Unknown;
-    httpresponse->headerCount = 0;
-    httpresponse->sendDataFunc = nullptr;
-    memset(httpresponse->statusMessage, 0, sizeof(httpresponse->statusMessage));
-    memset(httpresponse->filename, 0, sizeof(httpresponse->filename));
-
-    int size = ResHeaderSize * sizeof(ResponseHeader);
-    httpresponse->header = (ResponseHeader *)malloc(size);
-    memset(httpresponse->header, 0, size);
-    return httpresponse;
+    m_statusCode = HttpStatusCode::Unknown;
+    m_filename = string();
+    m_header.clear();
+    sendDataFunc = nullptr;
 }
 
-void httpResponseDestroy(HttpResponse *response)
+HttpResponse::~HttpResponse()
 {
-    if (response)
+}
+
+void HttpResponse::AddHeader(const string key, const string value)
+{
+    if (!key.empty() && !value.empty())
     {
-        free(response->header);
-        free(response);
+        m_header.insert(make_pair(key, value));
     }
 }
 
-void httpResponseAddHeader(HttpResponse *response, const char *key, const char *value)
-{
-    if (response && key && value)
-    {
-        strcpy(response->header[response->headerCount].key, key);
-        strcpy(response->header[response->headerCount].value, value);
-        response->headerCount++;
-    }
-}
-
-void httpResponsePrepareMsg(HttpResponse *response, Buffer *sendBuf, int socket)
+void HttpResponse::PrepareMsg(Buffer *sendBuf, int socket)
 {
     // 响应行
     char temp[512];
     memset(temp, 0, sizeof(temp));
-    sprintf(temp, "HTTP/1.1 %d %s\r\n", response->statusCode, response->statusMessage);
-    bufferAppendString(sendBuf, temp);
+    int code = (int)m_statusCode;
+    sprintf(temp, "HTTP/1.1 %d %s\r\n", code, m_info.at(code).data());
+    sendBuf->AppendString(temp);
     // 响应头
-    for (int i = 0; i < response->headerCount; i++)
+    for (auto &map_value : m_header)
     {
-        sprintf(temp, "%s: %s\r\n", response->header[i].key, response->header[i].value);
-        bufferAppendString(sendBuf, temp);
+        sprintf(temp, "%s: %s\r\n", map_value.first.data(), map_value.second.data());
+        sendBuf->AppendString(temp);
     }
     // 空行
-    bufferAppendString(sendBuf, "\r\n");
+    sendBuf->AppendString("\r\n");
 #ifndef MSG_SEND_AUTO
-    bufferSendData(sendBuf, socket);
+    sendBuf->SendData(socket);
 #endif
     // 执行sendFile or sendDir
-    response->sendDataFunc(response->filename, sendBuf, socket);
+    sendDataFunc(m_filename, sendBuf, socket);
 }

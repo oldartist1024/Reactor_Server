@@ -83,18 +83,18 @@ CMakeFiles/main.dir/src/Channel.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/main.dir/src/Channel.cpp.s"
 	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/xu/CPP_Project/Reactor_Server/src/Channel.cpp -o CMakeFiles/main.dir/src/Channel.cpp.s
 
-CMakeFiles/main.dir/src/ChannelMap.cpp.o: CMakeFiles/main.dir/flags.make
-CMakeFiles/main.dir/src/ChannelMap.cpp.o: ../src/ChannelMap.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/xu/CPP_Project/Reactor_Server/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/main.dir/src/ChannelMap.cpp.o"
-	/usr/bin/g++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/main.dir/src/ChannelMap.cpp.o -c /home/xu/CPP_Project/Reactor_Server/src/ChannelMap.cpp
+CMakeFiles/main.dir/src/Dispatcher.cpp.o: CMakeFiles/main.dir/flags.make
+CMakeFiles/main.dir/src/Dispatcher.cpp.o: ../src/Dispatcher.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/xu/CPP_Project/Reactor_Server/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/main.dir/src/Dispatcher.cpp.o"
+	/usr/bin/g++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/main.dir/src/Dispatcher.cpp.o -c /home/xu/CPP_Project/Reactor_Server/src/Dispatcher.cpp
 
-CMakeFiles/main.dir/src/ChannelMap.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/main.dir/src/ChannelMap.cpp.i"
-	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/xu/CPP_Project/Reactor_Server/src/ChannelMap.cpp > CMakeFiles/main.dir/src/ChannelMap.cpp.i
+CMakeFiles/main.dir/src/Dispatcher.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/main.dir/src/Dispatcher.cpp.i"
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/xu/CPP_Project/Reactor_Server/src/Dispatcher.cpp > CMakeFiles/main.dir/src/Dispatcher.cpp.i
 
-CMakeFiles/main.dir/src/ChannelMap.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/main.dir/src/ChannelMap.cpp.s"
-	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/xu/CPP_Project/Reactor_Server/src/ChannelMap.cpp -o CMakeFiles/main.dir/src/ChannelMap.cpp.s
+CMakeFiles/main.dir/src/Dispatcher.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/main.dir/src/Dispatcher.cpp.s"
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/xu/CPP_Project/Reactor_Server/src/Dispatcher.cpp -o CMakeFiles/main.dir/src/Dispatcher.cpp.s
 
 CMakeFiles/main.dir/src/EpollDispatcher.cpp.o: CMakeFiles/main.dir/flags.make
 CMakeFiles/main.dir/src/EpollDispatcher.cpp.o: ../src/EpollDispatcher.cpp
@@ -243,7 +243,7 @@ CMakeFiles/main.dir/src/selectDispatcher.cpp.s: cmake_force
 main_OBJECTS = \
 "CMakeFiles/main.dir/src/Buffer.cpp.o" \
 "CMakeFiles/main.dir/src/Channel.cpp.o" \
-"CMakeFiles/main.dir/src/ChannelMap.cpp.o" \
+"CMakeFiles/main.dir/src/Dispatcher.cpp.o" \
 "CMakeFiles/main.dir/src/EpollDispatcher.cpp.o" \
 "CMakeFiles/main.dir/src/EventLoop.cpp.o" \
 "CMakeFiles/main.dir/src/HttpRequest.cpp.o" \
@@ -261,7 +261,7 @@ main_EXTERNAL_OBJECTS =
 
 ../output/main: CMakeFiles/main.dir/src/Buffer.cpp.o
 ../output/main: CMakeFiles/main.dir/src/Channel.cpp.o
-../output/main: CMakeFiles/main.dir/src/ChannelMap.cpp.o
+../output/main: CMakeFiles/main.dir/src/Dispatcher.cpp.o
 ../output/main: CMakeFiles/main.dir/src/EpollDispatcher.cpp.o
 ../output/main: CMakeFiles/main.dir/src/EventLoop.cpp.o
 ../output/main: CMakeFiles/main.dir/src/HttpRequest.cpp.o

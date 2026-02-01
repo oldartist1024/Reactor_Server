@@ -1,21 +1,36 @@
 #include "TcpServer.h"
-
-TcpServer *tcpServerInit(unsigned short port, int threadNum)
+// 主反应堆接收到新连接的回调函数
+int TcpServer::acceptConnection(void *arg)
 {
-    TcpServer *server = (TcpServer *)malloc(sizeof(TcpServer));
-    server->threadNum = threadNum;
-    // 主反应堆初始化
-    server->mainLoop = EventLoopInit_t();
-    // 线程池初始化
-    server->threadPool = threadPoolInit(server->mainLoop, threadNum);
-    // 监听初始化
-    server->listener = listenerInit(port);
-    return server;
+    TcpServer *server = (TcpServer *)arg;
+    // 建立连接，获取用于通信的文件描述符
+    int cfd = accept(server->m_lfd, nullptr, nullptr);
+    if (cfd == -1)
+    {
+        perror("accept");
+        exit(0);
+    }
+    // 从线程池轮询获取一个工作反应堆
+    EventLoop *workerLoop = server->m_threadPool->takeWorkerEventLoop();
+    // 创建tcp连接，另那个工作反应堆去处理这段连接工作
+    new TcpConnection(cfd, workerLoop);
+    return 0;
 }
 
-Listener *listenerInit(unsigned short port)
+// 初始化服务器
+TcpServer::TcpServer(unsigned short port, int threadNum)
 {
-    Listener *listener = (Listener *)malloc(sizeof(Listener));
+    m_threadNum = threadNum;
+    // 主反应堆初始化
+    m_mainLoop = new EventLoop();
+    // 线程池初始化
+    m_threadPool = new ThreadPool(m_mainLoop, threadNum);
+    // 监听初始化
+    listenerInit(port);
+}
+// 初始化监听
+void TcpServer::listenerInit(unsigned short port)
+{
     // 1. 创建监听的套接字，获取监听文件描述符
     int lfd = socket(AF_INET, SOCK_STREAM, 0);
     if (lfd == -1)
@@ -29,7 +44,7 @@ Listener *listenerInit(unsigned short port)
     if (ret == -1)
     {
         perror("setsockopt SO_REUSEADDR");
-        return nullptr;
+        exit(0);
     }
     // 2. 将socket()返回值和本地的IP端口绑定到一起
     sockaddr_in addr;
@@ -49,35 +64,18 @@ Listener *listenerInit(unsigned short port)
         perror("listen");
         exit(0);
     }
-    listener->lfd = lfd;
-    listener->port = port;
-    return listener;
+    m_lfd = lfd;
+    m_port = port;
 }
-// 主反应堆接收到新连接的回调函数
-int acceptConnection(void *arg)
-{
-    TcpServer *server = (TcpServer *)arg;
-    // 建立连接，获取用于通信的文件描述符
-    int cfd = accept(server->listener->lfd, nullptr, nullptr);
-    if (cfd == -1)
-    {
-        perror("accept");
-        exit(0);
-    }
-    // 从线程池轮询获取一个工作反应堆
-    EventLoop *workerLoop = takeWorkerEventLoop(server->threadPool);
-    // 创建tcp连接，另那个工作反应堆去处理这段连接工作
-    TcpConnectionInit(cfd, workerLoop);
-    return 0;
-}
-void tcpServerRun(TcpServer *server)
+// 启动服务器
+void TcpServer::Run()
 {
     Debug("服务器程序已经启动了...");
     // 线程池启动
-    threadPoolRun(server->threadPool);
+    m_threadPool->threadPoolRun();
     // 将用于监听以接受新连接的channel加入主反应堆
-    Channel *channel = ChannelInit(server->listener->lfd, READ_EVENT, acceptConnection, nullptr, nullptr, server);
-    eventLoopAddTask(server->mainLoop, channel, ADD);
+    Channel *channel = new Channel(m_lfd, EventType::READ_EVENT, acceptConnection, nullptr, nullptr, this);
+    m_mainLoop->AddTask(channel, ElementType::ADD);
     // 启动主反应堆
-    EventLoopRun(server->mainLoop);
+    m_mainLoop->Run();
 }

@@ -1,32 +1,30 @@
 #include "Channel.h"
-
-Channel *ChannelInit(int fd, int events, handleFunc readHandler, handleFunc writeHandler, handleFunc destroyHandler, void *arg)
+Channel::Channel(int fd, EventType events, handleFunc readHandler, handleFunc writeHandler, handleFunc destroyHandler, void *arg)
 {
-    Channel *channel = (Channel *)malloc(sizeof(Channel));
-    channel->fd = fd;
-    channel->events = events;
-    channel->readHandler = readHandler;
-    channel->writeHandler = writeHandler;
-    channel->destroyCallback = destroyHandler;
-    channel->arg = arg;
-    return channel;
+    this->m_fd = fd;
+    this->m_events = (int)events;
+    this->readHandler = readHandler;
+    this->writeHandler = writeHandler;
+    this->destroyCallback = destroyHandler;
+    this->m_arg = arg;
 }
 
-void writeEventEnable(Channel *channel, bool flag)
+void Channel::writeEventEnable(bool flag)
 {
     if (flag)
     {
         // 添加写事件
-        channel->events |= WRITE_EVENT;
+        // this->m_events |= (int)EventType::WRITE_EVENT;
+        this->m_events |= static_cast<int>(EventType::WRITE_EVENT);
     }
     else
     {
         // 删除写事件
-        channel->events &= ~WRITE_EVENT;
+        this->m_events &= ~(int)EventType::WRITE_EVENT;
     }
 }
 
-bool isWriteEventEnable(Channel *channel)
+bool Channel::isWriteEventEnable()
 {
-    return channel->events & WRITE_EVENT;
+    return this->m_events & (int)EventType::WRITE_EVENT;
 }

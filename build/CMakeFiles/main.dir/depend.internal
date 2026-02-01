@@ -7,32 +7,38 @@ CMakeFiles/main.dir/src/Buffer.cpp.o
 CMakeFiles/main.dir/src/Channel.cpp.o
  ../include/Channel.h
  /home/xu/CPP_Project/Reactor_Server/src/Channel.cpp
-CMakeFiles/main.dir/src/ChannelMap.cpp.o
+CMakeFiles/main.dir/src/Dispatcher.cpp.o
  ../include/Channel.h
- ../include/ChannelMap.h
- /home/xu/CPP_Project/Reactor_Server/src/ChannelMap.cpp
+ ../include/Dispatcher.h
+ /home/xu/CPP_Project/Reactor_Server/src/Dispatcher.cpp
 CMakeFiles/main.dir/src/EpollDispatcher.cpp.o
  ../include/Channel.h
- ../include/ChannelMap.h
  ../include/Dispatcher.h
+ ../include/EpollDispatcher.h
  ../include/EventLoop.h
+ ../include/pollDispatcher.h
+ ../include/selectDispatcher.h
  /home/xu/CPP_Project/Reactor_Server/src/EpollDispatcher.cpp
 CMakeFiles/main.dir/src/EventLoop.cpp.o
  ../include/Channel.h
- ../include/ChannelMap.h
  ../include/Dispatcher.h
+ ../include/EpollDispatcher.h
  ../include/EventLoop.h
+ ../include/pollDispatcher.h
+ ../include/selectDispatcher.h
  /home/xu/CPP_Project/Reactor_Server/src/EventLoop.cpp
 CMakeFiles/main.dir/src/HttpRequest.cpp.o
  ../include/Buffer.h
  ../include/Channel.h
- ../include/ChannelMap.h
  ../include/Dispatcher.h
+ ../include/EpollDispatcher.h
  ../include/EventLoop.h
  ../include/HttpRequest.h
  ../include/HttpResponse.h
  ../include/Log.h
  ../include/TcpConnection.h
+ ../include/pollDispatcher.h
+ ../include/selectDispatcher.h
  /home/xu/CPP_Project/Reactor_Server/src/HttpRequest.cpp
 CMakeFiles/main.dir/src/HttpResponse.cpp.o
  ../include/Buffer.h
@@ -41,19 +47,21 @@ CMakeFiles/main.dir/src/HttpResponse.cpp.o
 CMakeFiles/main.dir/src/TcpConnection.cpp.o
  ../include/Buffer.h
  ../include/Channel.h
- ../include/ChannelMap.h
  ../include/Dispatcher.h
+ ../include/EpollDispatcher.h
  ../include/EventLoop.h
  ../include/HttpRequest.h
  ../include/HttpResponse.h
  ../include/Log.h
  ../include/TcpConnection.h
+ ../include/pollDispatcher.h
+ ../include/selectDispatcher.h
  /home/xu/CPP_Project/Reactor_Server/src/TcpConnection.cpp
 CMakeFiles/main.dir/src/TcpServer.cpp.o
  ../include/Buffer.h
  ../include/Channel.h
- ../include/ChannelMap.h
  ../include/Dispatcher.h
+ ../include/EpollDispatcher.h
  ../include/EventLoop.h
  ../include/HttpRequest.h
  ../include/HttpResponse.h
@@ -62,27 +70,33 @@ CMakeFiles/main.dir/src/TcpServer.cpp.o
  ../include/TcpServer.h
  ../include/ThreadPool.h
  ../include/WorkerThread.h
+ ../include/pollDispatcher.h
+ ../include/selectDispatcher.h
  /home/xu/CPP_Project/Reactor_Server/src/TcpServer.cpp
 CMakeFiles/main.dir/src/ThreadPool.cpp.o
  ../include/Channel.h
- ../include/ChannelMap.h
  ../include/Dispatcher.h
+ ../include/EpollDispatcher.h
  ../include/EventLoop.h
  ../include/ThreadPool.h
  ../include/WorkerThread.h
+ ../include/pollDispatcher.h
+ ../include/selectDispatcher.h
  /home/xu/CPP_Project/Reactor_Server/src/ThreadPool.cpp
 CMakeFiles/main.dir/src/WorkerThread.cpp.o
  ../include/Channel.h
- ../include/ChannelMap.h
  ../include/Dispatcher.h
+ ../include/EpollDispatcher.h
  ../include/EventLoop.h
  ../include/WorkerThread.h
+ ../include/pollDispatcher.h
+ ../include/selectDispatcher.h
  /home/xu/CPP_Project/Reactor_Server/src/WorkerThread.cpp
 CMakeFiles/main.dir/src/main.cpp.o
  ../include/Buffer.h
  ../include/Channel.h
- ../include/ChannelMap.h
  ../include/Dispatcher.h
+ ../include/EpollDispatcher.h
  ../include/EventLoop.h
  ../include/HttpRequest.h
  ../include/HttpResponse.h
@@ -91,16 +105,22 @@ CMakeFiles/main.dir/src/main.cpp.o
  ../include/TcpServer.h
  ../include/ThreadPool.h
  ../include/WorkerThread.h
+ ../include/pollDispatcher.h
+ ../include/selectDispatcher.h
  /home/xu/CPP_Project/Reactor_Server/src/main.cpp
 CMakeFiles/main.dir/src/pollDispatcher.cpp.o
  ../include/Channel.h
- ../include/ChannelMap.h
  ../include/Dispatcher.h
+ ../include/EpollDispatcher.h
  ../include/EventLoop.h
+ ../include/pollDispatcher.h
+ ../include/selectDispatcher.h
  /home/xu/CPP_Project/Reactor_Server/src/pollDispatcher.cpp
 CMakeFiles/main.dir/src/selectDispatcher.cpp.o
  ../include/Channel.h
- ../include/ChannelMap.h
  ../include/Dispatcher.h
+ ../include/EpollDispatcher.h
  ../include/EventLoop.h
+ ../include/pollDispatcher.h
+ ../include/selectDispatcher.h
  /home/xu/CPP_Project/Reactor_Server/src/selectDispatcher.cpp

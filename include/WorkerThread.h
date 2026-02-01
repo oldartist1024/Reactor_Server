@@ -1,16 +1,29 @@
 #pragma once
-using namespace std;
-#include <pthread.h>
+#include <thread>
 #include "EventLoop.h"
-struct WorkerThread
+#include <condition_variable>
+using namespace std;
+class WorkerThread
 {
-    pthread_t threadId;    // 线程id
-    char threadName[24];   // 线程的名字
-    pthread_mutex_t mutex; // 线程的互斥锁
-    pthread_cond_t cond;   // 线程的条件变量
-    EventLoop *eventLoop;  // 线程对应的反应堆
+public:
+    // 初始化工作线程
+    WorkerThread(int index);
+    ~WorkerThread();
+    // 工作线程启动
+    void run();
+    inline EventLoop *GetWorkingThread()
+    {
+        return m_eventLoop;
+    }
+
+private:
+    void subThreadRunning();
+
+private:
+    thread *m_thread;          // 线程类
+    thread::id m_threadId;     // 线程id
+    string m_threadName;       // 线程的名字
+    mutex m_mutex;             // 线程的互斥锁
+    condition_variable m_cond; // 线程的条件变量
+    EventLoop *m_eventLoop;    // 线程对应的反应堆
 };
-// 工作线程初始化
-int WorkerThreadInit(WorkerThread *workerThread, int index);
-// 工作线程启动
-void WorkerThreadRun(WorkerThread *workerThread);

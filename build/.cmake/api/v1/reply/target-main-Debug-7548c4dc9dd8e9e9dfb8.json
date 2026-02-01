@@ -139,7 +139,7 @@
 		{
 			"backtrace" : 1,
 			"compileGroupIndex" : 0,
-			"path" : "src/ChannelMap.cpp",
+			"path" : "src/Dispatcher.cpp",
 			"sourceGroupIndex" : 0
 		},
 		{

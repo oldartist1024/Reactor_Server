@@ -177,32 +177,32 @@ src/Channel.cpp.s:
 	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/src/Channel.cpp.s
 .PHONY : src/Channel.cpp.s
 
-src/ChannelMap.o: src/ChannelMap.cpp.o
+src/Dispatcher.o: src/Dispatcher.cpp.o
 
-.PHONY : src/ChannelMap.o
+.PHONY : src/Dispatcher.o
 
 # target to build an object file
-src/ChannelMap.cpp.o:
-	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/src/ChannelMap.cpp.o
-.PHONY : src/ChannelMap.cpp.o
+src/Dispatcher.cpp.o:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/src/Dispatcher.cpp.o
+.PHONY : src/Dispatcher.cpp.o
 
-src/ChannelMap.i: src/ChannelMap.cpp.i
+src/Dispatcher.i: src/Dispatcher.cpp.i
 
-.PHONY : src/ChannelMap.i
+.PHONY : src/Dispatcher.i
 
 # target to preprocess a source file
-src/ChannelMap.cpp.i:
-	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/src/ChannelMap.cpp.i
-.PHONY : src/ChannelMap.cpp.i
+src/Dispatcher.cpp.i:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/src/Dispatcher.cpp.i
+.PHONY : src/Dispatcher.cpp.i
 
-src/ChannelMap.s: src/ChannelMap.cpp.s
+src/Dispatcher.s: src/Dispatcher.cpp.s
 
-.PHONY : src/ChannelMap.s
+.PHONY : src/Dispatcher.s
 
 # target to generate assembly for a file
-src/ChannelMap.cpp.s:
-	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/src/ChannelMap.cpp.s
-.PHONY : src/ChannelMap.cpp.s
+src/Dispatcher.cpp.s:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/src/Dispatcher.cpp.s
+.PHONY : src/Dispatcher.cpp.s
 
 src/EpollDispatcher.o: src/EpollDispatcher.cpp.o
 
@@ -516,9 +516,9 @@ help:
 	@echo "... src/Channel.o"
 	@echo "... src/Channel.i"
 	@echo "... src/Channel.s"
-	@echo "... src/ChannelMap.o"
-	@echo "... src/ChannelMap.i"
-	@echo "... src/ChannelMap.s"
+	@echo "... src/Dispatcher.o"
+	@echo "... src/Dispatcher.i"
+	@echo "... src/Dispatcher.s"
 	@echo "... src/EpollDispatcher.o"
 	@echo "... src/EpollDispatcher.i"
 	@echo "... src/EpollDispatcher.s"

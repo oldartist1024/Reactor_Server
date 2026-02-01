@@ -1,114 +1,111 @@
 #include "EventLoop.h"
-// 初始化主反应堆
-EventLoop *EventLoopInit_t()
-{
-    return EventLoopInit(nullptr);
-}
-void writeLocalMessage(EventLoop *evLoop)
+#include "EpollDispatcher.h"
+void EventLoop::writeLocalMessage()
 {
     const char buf[] = "wake up";
-    write(evLoop->socketPair[0], buf, strlen(buf));
+    write(this->m_socketPair[0], buf, strlen(buf));
 }
-int readLocalMessage(void *arg)
+int EventLoop::readMessage(void *arg)
 {
     EventLoop *evLoop = (EventLoop *)arg;
     char buf[256];
-    read(evLoop->socketPair[1], buf, sizeof(buf));
+    read(evLoop->m_socketPair[1], buf, sizeof(buf));
     return 0;
 }
-// 初始化反应堆
-EventLoop *EventLoopInit(const char *name)
+int EventLoop::readLocalMessage(void *arg)
 {
-    EventLoop *evLoop = (EventLoop *)malloc(sizeof(EventLoop));
-    evLoop->isQuit = false;
+    EventLoop *evLoop = (EventLoop *)arg;
+    char buf[256];
+    read(evLoop->m_socketPair[1], buf, sizeof(buf));
+    return 0;
+}
 
-    evLoop->dispatcher = &Epoll_dispatcher;
-    evLoop->dispatcherData = evLoop->dispatcher->init();
-    evLoop->head = nullptr;
-    evLoop->tail = nullptr;
+EventLoop::EventLoop() : EventLoop(string())
+{
+}
 
-    evLoop->channelMap = ChannelMapInit(128);
-    evLoop->threadId = pthread_self();
-    // 初始化互斥锁
-    pthread_mutex_init(&evLoop->lock, nullptr);
+EventLoop::EventLoop(const string name)
+{
+    m_isQuit = false;
+
+    m_dispatcher = new EpollDispatcher(this);
+
+    m_channelMap.clear();
+    m_threadId = this_thread::get_id();
     // 给反应堆的名字赋值
     char threadName[32];
-    if (name == nullptr)
-        strcpy(evLoop->threadName, "MainThread");
+    if (name == string())
+        m_threadName = "MainThread";
     else
-        strcpy(evLoop->threadName, name);
+        m_threadName = name;
     // 设置本地通信的socketpair，实现自唤醒机制
-    int ret = socketpair(AF_UNIX, SOCK_STREAM, 0, evLoop->socketPair);
+    int ret = socketpair(AF_UNIX, SOCK_STREAM, 0, m_socketPair);
     if (ret < 0)
     {
         perror("socketpair");
-        return nullptr;
+        exit(0);
     }
-    Channel *channel = ChannelInit(evLoop->socketPair[1], READ_EVENT, readLocalMessage, nullptr, nullptr, evLoop);
-    eventLoopAddTask(evLoop, channel, ADD);
-    return evLoop;
+#if 1
+    Channel *channel = new Channel(m_socketPair[1], EventType::READ_EVENT, readLocalMessage, nullptr, nullptr, this);
+#else
+    // 使用可调用对象包装器和绑定器
+#endif
+    AddTask(channel, ElementType::ADD);
 }
-int EventLoopRun(EventLoop *evLoop)
+
+EventLoop::~EventLoop()
 {
-    assert(evLoop != NULL);
-    if (evLoop->threadId != pthread_self())
+}
+
+int EventLoop::Run()
+{
+    if (this->m_threadId != this_thread::get_id())
     {
         return -1;
     }
-    Dispatcher *dispatcher = evLoop->dispatcher;
-    while (!evLoop->isQuit) // 当反应堆还没有退出时
+    Dispatcher *dispatcher = this->m_dispatcher;
+    while (!this->m_isQuit) // 当反应堆还没有退出时
     {
         // 调用epoll/poll/select的dispatch函数，等待事件的发生
-        dispatcher->dispatch(evLoop, 10);
-        eventLoopProcessTask(evLoop);
+        dispatcher->dispatch(10);
+        ProcessTask();
     }
     return 0;
 }
-
-int eventActivate(EventLoop *evLoop, int fd, int event)
+// 执行channel检测到的事件对应的读写回调函数
+int EventLoop::Activate(int fd, int event)
 {
     // 检测文件描述符与反应堆的合法性
-    if (fd <= 0 || evLoop == nullptr)
+    if (fd <= 0)
     {
         return -1;
     }
-    Channel *channel = evLoop->channelMap->list[fd];
-    assert(fd == channel->fd);
-    if (event & READ_EVENT && channel->readHandler)
+    Channel *channel = this->m_channelMap[fd];
+    assert(fd == channel->getfd());
+    if (event & (int)EventType::READ_EVENT && channel->readHandler)
     {
-        channel->readHandler(channel->arg);
+        channel->readHandler(const_cast<void *>(channel->getArg()));
     }
-    if (event & WRITE_EVENT && channel->writeHandler)
+    if (event & (int)EventType::WRITE_EVENT && channel->writeHandler)
     {
-        channel->writeHandler(channel->arg);
+        channel->writeHandler(const_cast<void *>(channel->getArg()));
     }
     return 0;
 }
-
-int eventLoopAddTask(EventLoop *evLoop, Channel *channel, ElementType type)
+// 添加任务到任务队列
+int EventLoop::AddTask(Channel *channel, ElementType type)
 {
-    pthread_mutex_lock(&evLoop->lock);
+    m_lock.lock();
     // 定义一个链表节点
-    ChannelElement *element = (ChannelElement *)malloc(sizeof(ChannelElement));
+    ChannelElement *element = new ChannelElement;
     element->channel = channel;
-    element->type = type; // 执行什么操作
-    element->next = nullptr;
-    if (!evLoop->head) // 当前链表为空
-    {
-        // 头节点和尾节点都指向同一个节点
-        evLoop->head = evLoop->tail = element;
-    }
-    else
-    {
-        // 将新节点添加到链表尾部
-        evLoop->tail->next = element;
-        evLoop->tail = element;
-    }
-    pthread_mutex_unlock(&evLoop->lock);
-    if (evLoop->threadId == pthread_self())
+    element->type = type;  // 执行什么操作
+    m_taskQ.push(element); // 添加到任务队列
+    m_lock.unlock();
+    if (this->m_threadId != this_thread::get_id())
     {
         // 当前子线程，同一线程，直接处理
-        eventLoopProcessTask(evLoop);
+        ProcessTask();
     }
     else
     {
@@ -119,98 +116,83 @@ int eventLoopAddTask(EventLoop *evLoop, Channel *channel, ElementType type)
 
         // 主线程 -- 告诉子线程处理任务队列中的任务
         // 主线程只起到接受连接并给子线程分配连接的作用
-        writeLocalMessage(evLoop);
+        writeLocalMessage();
     }
     return 0;
 }
-
-int eventLoopProcessTask(EventLoop *evLoop)
+// 处理任务队列中的任务
+int EventLoop::ProcessTask()
 {
-    pthread_mutex_lock(&evLoop->lock);
-    ChannelElement *head = evLoop->head; // 取出头节点
-    while (head)
+    while (!m_taskQ.empty())
     {
-        Channel *channel = head->channel;
-        ElementType type = head->type;
-        if (type == ADD)
+        m_lock.lock();
+        ChannelElement *channelelement = m_taskQ.front();
+        m_taskQ.pop();
+        m_lock.unlock();
+        if (channelelement->type == ElementType::ADD)
         {
-            eventLoopAdd(evLoop, channel);
+            Add(channelelement->channel);
         }
-        else if (type == REMOVE)
+        else if (channelelement->type == ElementType::REMOVE)
         {
-            eventLoopRemove(evLoop, channel);
+            Remove(channelelement->channel);
         }
-        else if (type == MODIFY)
+        else if (channelelement->type == ElementType::MODIFY)
         {
-            eventLoopModify(evLoop, channel);
+            Modify(channelelement->channel);
         }
-        // 头节点后移
-        ChannelElement *temp = head;
-        head = head->next;
-        free(temp); // 释放已经被取出的头节点
+        delete channelelement; // 释放已经被取出的头节点
     }
-    evLoop->head = evLoop->tail = nullptr; // 一次性全部取完
-    pthread_mutex_unlock(&evLoop->lock);
     return 0;
 }
-
-int eventLoopAdd(EventLoop *evLoop, Channel *channel)
+// 往evLoop的channelmap里添加channel
+int EventLoop::Add(Channel *channel)
 {
-    int fd = channel->fd;
-    ChannelMap *channelMap = evLoop->channelMap;
-    if (fd >= channelMap->size)
+    int fd = channel->getfd();
+    if (m_channelMap.find(fd) == m_channelMap.end())
     {
-        int res = makeMapRoom(channelMap, fd + 1, sizeof(Channel *));
-        if (!res)
-        {
-            return -1;
-        }
+        // m_channelMap[fd] = channel;
+        m_channelMap.insert(make_pair(fd, channel));
+        m_dispatcher->SetChannel(channel);
+        int ret = m_dispatcher->add();
+        return ret;
     }
-    int ret = -1;
-    if (!channelMap->list[fd])
-    {
-        channelMap->list[fd] = channel;
-        ret = evLoop->dispatcher->add(channel, evLoop);
-    }
-    return ret;
+    return -1;
 }
-
-int eventLoopRemove(EventLoop *evLoop, Channel *channel)
+// 往evLoop的channelmap里删除channel
+int EventLoop::Remove(Channel *channel)
 {
-    int fd = channel->fd;
-    ChannelMap *channelMap = evLoop->channelMap;
-    if (fd >= channelMap->size)
+    int fd = channel->getfd();
+    if (m_channelMap.find(fd) == m_channelMap.end())
     {
         return -1;
     }
-    int ret = -1;
-    if (channelMap->list[fd])
-    {
-        ret = evLoop->dispatcher->remove(channel, evLoop);
-    }
+    m_dispatcher->SetChannel(channel);
+    int ret = this->m_dispatcher->remove();
     return ret;
 }
-
-int eventLoopModify(EventLoop *evLoop, Channel *channel)
+// 往evLoop的channelmap里修改channel
+int EventLoop::Modify(Channel *channel)
 {
-    int fd = channel->fd;
-    ChannelMap *channelMap = evLoop->channelMap;
-    if (fd >= channelMap->size || channelMap->list[fd] == nullptr)
+    int fd = channel->getfd();
+    if (m_channelMap.find(fd) == m_channelMap.end())
     {
         return -1;
     }
-    int ret = -1;
-    if (channelMap->list[fd])
-    {
-        ret = evLoop->dispatcher->modify(channel, evLoop);
-    }
+    m_dispatcher->SetChannel(channel);
+    int ret = this->m_dispatcher->modify();
     return ret;
 }
-
-int destroyChannel(EventLoop *evLoop, Channel *channel)
+// 释放channel
+int EventLoop::DestroyChannel(Channel *channel)
 {
-    evLoop->channelMap->list[channel->fd] = nullptr;
-    close(channel->fd);
-    free(channel);
-    return 0;
+    int fd = channel->getfd();
+    if (m_channelMap.find(fd) == m_channelMap.end())
+    {
+        return -1;
+    }
+    int ret = m_channelMap.erase(fd);
+    close(channel->getfd());
+    delete channel;
+    return ret;
 }

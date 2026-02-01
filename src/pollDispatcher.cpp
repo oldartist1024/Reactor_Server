@@ -1,128 +1,100 @@
-#include <unistd.h>
-#include "Dispatcher.h"
-#include "EventLoop.h"
-#include <poll.h>
-#define MAX 520
-struct pollData
-{
-    int maxfd;
-    pollfd fd[MAX];
-};
-static void *pollinit();
-// 添加channel到pollfd数组
-static int polladd(struct Channel *channel, struct EventLoop *evLoop);
-// 删除channel从pollfd数组
-static int pollremove(struct Channel *channel, struct EventLoop *evLoop);
-// 修改channel在pollfd数组的事件
-static int pollmodify(struct Channel *channel, struct EventLoop *evLoop);
-// 事件监测并执行对应回调
-static int polldispatch(struct EventLoop *evLoop, int timeout); // 单位: s
-// 清除数据(关闭fd或者释放内存)
-static int pollclear(struct EventLoop *evLoop);
+#include "pollDispatcher.h"
 
-Dispatcher poll_dispatcher = {
-    .init = pollinit,
-    .add = polladd,
-    .remove = pollremove,
-    .modify = pollmodify,
-    .dispatch = polldispatch,
-    .clear = pollclear,
-};
-
-static void *pollinit()
+PollDispatcher::PollDispatcher(EventLoop *evLoop) : Dispatcher(evLoop)
 {
-    pollData *data = (pollData *)malloc(sizeof(pollData));
-    data->maxfd = 0;
-    for (int i = 0; i < MAX; i++)
+    m_maxfd = 0;
+    m_fd = new pollfd[m_maxNode];
+    for (int i = 0; i < m_maxNode; i++)
     {
-        data->fd[i].fd = -1;
-        data->fd[i].events = 0;
-        data->fd[i].revents = 0;
+        m_fd[i].fd = -1;
+        m_fd[i].events = 0;
+        m_fd[i].revents = 0;
     }
-    return data;
+    m_name = "Poll";
 }
-// 添加
-static int polladd(struct Channel *channel, struct EventLoop *evLoop)
+
+PollDispatcher::~PollDispatcher()
+{
+    delete[] m_fd;
+}
+
+int PollDispatcher::add()
 {
     int ret = -1;
-    pollData *data = (pollData *)(evLoop->dispatcherData);
     int events = 0;
-    if (channel->events & READ_EVENT)
+    if (m_channel->getEvents() & (int)EventType::READ_EVENT)
         events |= POLLIN;
-    if (channel->events & WRITE_EVENT)
+    if (m_channel->getEvents() & (int)EventType::WRITE_EVENT)
         events |= POLLOUT;
-    for (int i = 0; i < MAX; i++)
+    for (int i = 0; i < m_maxNode; i++)
     {
-        if (data->fd[i].fd == -1)
+        if (m_fd[i].fd == -1)
         {
-            data->fd[i].fd = channel->fd;
-            data->fd[i].events = events;
-            if (data->maxfd < i)
-                data->maxfd = i;
+            m_fd[i].fd = m_channel->getfd();
+            m_fd[i].events = events;
+            if (m_maxfd < i)
+                m_maxfd = i;
             ret = 1;
             break;
         }
     }
     return ret;
 }
-// 删除
-static int pollremove(struct Channel *channel, struct EventLoop *evLoop)
+
+int PollDispatcher::remove()
 {
     int ret = -1;
-    pollData *data = (pollData *)(evLoop->dispatcherData);
-    for (int i = 0; i < MAX; i++)
+    for (int i = 0; i < m_maxNode; i++)
     {
-        if (data->fd[i].fd == channel->fd)
+        if (m_fd[i].fd == m_channel->getfd())
         {
-            data->fd[i].fd = -1;
-            data->fd[i].events = 0;
-            data->fd[i].revents = 0;
+            m_fd[i].fd = -1;
+            m_fd[i].events = 0;
+            m_fd[i].revents = 0;
             // 要不要更新maxfd
             ret = 1;
             break;
         }
     }
     // 移除channel后，调用其销毁回调函数（断开tcp连接的函数）
-    channel->destroyCallback(channel->arg);
+    m_channel->destroyCallback(const_cast<void *>(m_channel->getArg()));
     return ret;
 }
-// 修改
-static int pollmodify(struct Channel *channel, struct EventLoop *evLoop)
+
+int PollDispatcher::modify()
 {
     int ret = -1;
-    pollData *data = (pollData *)(evLoop->dispatcherData);
     int events = 0;
-    if (channel->events & READ_EVENT)
+    if (m_channel->getEvents() & (int)EventType::READ_EVENT)
         events |= POLLIN;
-    if (channel->events & WRITE_EVENT)
+    if (m_channel->getEvents() & (int)EventType::WRITE_EVENT)
         events |= POLLOUT;
-    for (int i = 0; i < MAX; i++)
+    for (int i = 0; i < m_maxNode; i++)
     {
-        if (data->fd[i].fd == channel->fd)
+        if (m_fd[i].fd == m_channel->getfd())
         {
-            data->fd[i].events = events;
+            m_fd[i].events = events;
             ret = 1;
             break;
         }
     }
     return ret;
 }
-// 事件监测
-static int polldispatch(struct EventLoop *evLoop, int timeout)
+
+int PollDispatcher::dispatch(int timeout)
 {
-    pollData *data = (pollData *)(evLoop->dispatcherData);
-    int res = poll(data->fd, data->maxfd + 1, timeout * 1000);
+    int res = poll(m_fd, m_maxfd + 1, timeout * 1000);
     if (res == -1)
     {
         perror("poll");
         exit(0);
     }
-    for (int i = 0; i < data->maxfd + 1; i++)
+    for (int i = 0; i < m_maxfd + 1; i++)
     {
-        int fd = data->fd[i].fd;
+        int fd = m_fd[i].fd;
         if (fd == -1)
             continue;
-        int events = data->fd[i].revents;
+        int events = m_fd[i].revents;
         if (events & POLLERR || events & POLLHUP)
         {
             // 对方断开了连接, 删除 fd
@@ -130,20 +102,12 @@ static int polldispatch(struct EventLoop *evLoop, int timeout)
         }
         if (events & POLLIN)
         {
-            // 读事件
-            eventActivate(evLoop, fd, READ_EVENT);
+            m_evLoop->Activate(fd, (int)EventType::READ_EVENT);
         }
         if (events & POLLOUT)
         {
-            // 写事件
-            eventActivate(evLoop, fd, WRITE_EVENT);
+            m_evLoop->Activate(fd, (int)EventType::WRITE_EVENT);
         }
     }
-    return 0;
-}
-static int pollclear(struct EventLoop *evLoop)
-{
-    pollData *data = (pollData *)(evLoop->dispatcherData);
-    free(data);
     return 0;
 }

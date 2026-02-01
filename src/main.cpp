@@ -17,7 +17,7 @@ int main(int argc, char *argv[])
     uint16_t port = 10000;
     chdir("/home/xu/test");
 #endif
-    TcpServer *server = tcpServerInit(port, 4);
-    tcpServerRun(server);
+    TcpServer *server = new TcpServer(port, 4);
+    server->Run();
     return 0;
 }

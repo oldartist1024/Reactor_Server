@@ -1,54 +1,63 @@
 #include "ThreadPool.h"
-
-ThreadPool *threadPoolInit(EventLoop *mainLoop, int count)
+// 初始化线程池
+ThreadPool::ThreadPool(EventLoop *mainLoop, int count)
 {
-    ThreadPool *threadPool = (ThreadPool *)malloc(sizeof(ThreadPool));
-    threadPool->IsStart = false;
-    threadPool->Index = 0;
-    threadPool->ThreadNum = count;
-    threadPool->mainLoop = mainLoop;
-    threadPool->workerThreads = (WorkerThread *)malloc(sizeof(WorkerThread) * count);
-    return threadPool;
+    m_IsStart = false;
+    m_Index = 0;
+    m_ThreadNum = count;
+    m_mainLoop = mainLoop;
+    m_workerThreads.clear();
+}
+ThreadPool::~ThreadPool()
+{
+    for (auto value : m_workerThreads)
+    {
+        delete value;
+    }
 }
 
-void threadPoolRun(ThreadPool *threadpool)
+// 启动线程池
+void ThreadPool::threadPoolRun()
 {
-    assert(threadpool != nullptr && !threadpool->IsStart);
-    if (threadpool->mainLoop->threadId != pthread_self())
+    assert(!m_IsStart);
+    if (m_mainLoop->GetThreadid() != this_thread::get_id())
     {
         // 验证只能在主线程启动线程池
         exit(0);
     }
-    threadpool->IsStart = true;
-    if (threadpool->ThreadNum)
+    m_IsStart = true;
+    if (m_ThreadNum)
     {
-        for (int i = 0; i < threadpool->ThreadNum; i++)
+        for (int i = 0; i < m_ThreadNum; i++)
         {
             // 依次初始化并启动工作线程
-            WorkerThreadInit(&threadpool->workerThreads[i], i);
-            WorkerThreadRun(&threadpool->workerThreads[i]);
+            WorkerThread *workerthread = new WorkerThread(i);
+            workerthread->run();
+            m_workerThreads.push_back(workerthread);
         }
     }
 }
-EventLoop *takeWorkerEventLoop(ThreadPool *threadpool)
+// 取出线程池中的某个子线程的反应堆实例
+EventLoop *ThreadPool::takeWorkerEventLoop()
 {
-    assert(threadpool != nullptr && threadpool->IsStart);
-    if (threadpool->mainLoop->threadId != pthread_self())
+    assert(m_IsStart);
+    if (m_mainLoop->GetThreadid() != this_thread::get_id())
     {
         // 验证只能在主线程获取子线程反应堆实例
         exit(0);
     }
-    EventLoop *evLoop = threadpool->mainLoop;
-    if (threadpool->ThreadNum)
+    // 没有子反应堆就让主反应堆来处理
+    EventLoop *evLoop = m_mainLoop;
+    if (m_ThreadNum)
     {
         // 轮询地取出一个子反应堆
-        evLoop = threadpool->workerThreads[threadpool->Index].eventLoop;
+        evLoop = m_workerThreads[m_Index]->GetWorkingThread();
         // 参数+1
-        threadpool->Index++;
+        m_Index++;
         // 超过线程数量则重置为0
-        if (threadpool->Index >= threadpool->ThreadNum)
+        if (m_Index >= m_ThreadNum)
         {
-            threadpool->Index = 0;
+            m_Index = 0;
         }
     }
     return evLoop;
