@@ -15,7 +15,7 @@ int main(int argc, char *argv[])
     chdir(path);
 #else
     uint16_t port = 10000;
-    chdir("/home/xu/test");
+    chdir("/home/oldartist/Reactor_Server/asset");
 #endif
     TcpServer *server = new TcpServer(port, 4);
     server->Run();
